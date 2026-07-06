@@ -1,0 +1,54 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('maintenance_logs', function (Blueprint $table) {
+
+    $table->id();p
+
+    $table->foreignId('equipment_id')
+          ->constrained('equipment')
+          ->cascadeOnDelete();
+
+    $table->date('maintenance_date');
+    
+    $table->string('maintenance_type');
+
+    $table->string('technician');
+
+    $table->string('vendor')->nullable();
+
+    $table->decimal('cost',12,2)->default(0);
+
+    $table->text('parts_replaced')->nullable();
+
+    $table->text('action_taken');
+
+    $table->date('next_maintenance')->nullable();
+
+    $table->text('remarks')->nullable();
+
+    $table->timestamps();
+
+});
+
+
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('maintenance_logs');
+    }
+};
