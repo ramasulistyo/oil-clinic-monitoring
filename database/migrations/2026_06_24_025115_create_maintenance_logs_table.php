@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('maintenance_logs', function (Blueprint $table) {
 
-    $table->id();p
+    $table->id();
 
     $table->foreignId('equipment_id')
           ->constrained('equipment')

@@ -73,32 +73,71 @@ class MaintenanceLogController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(MaintenanceLog $maintenanceLog)
     {
-        //
+         $maintenanceLog->load('equipment');
+
+        return view(
+            'maintenance-log.show',
+            compact('maintenanceLog')
+        );
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(MaintenanceLog $maintenanceLog)
     {
-        //
+        $equipment = Equipment::orderBy('equipment_name')->get();
+
+        return view(
+            'maintenance-log.edit',
+            compact(
+                'maintenanceLog',
+                'equipment'
+            )
+        );
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, MaintenanceLog $maintenanceLog)
     {
-        //
+            $maintenanceLog->update([
+
+            'equipment_id'      => $request->equipment_id,
+
+            'maintenance_date'  => $request->maintenance_date,
+
+            'maintenance_type'  => $request->maintenance_type,
+
+            'technician'        => $request->technician,
+
+            'vendor'            => $request->vendor,
+
+            'cost'              => $request->cost,
+
+            'parts_replaced'    => $request->parts_replaced,
+
+            'action_taken'      => $request->action_taken,
+
+            'next_maintenance'  => $request->next_maintenance,
+
+            'remarks'           => $request->remarks,
+
+        ]);
+
+        return redirect('/maintenance-log');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(MaintenanceLog $maintenanceLog)
     {
-        //
+         $maintenanceLog->delete();
+
+        return redirect('/maintenance-log');
     }
 }

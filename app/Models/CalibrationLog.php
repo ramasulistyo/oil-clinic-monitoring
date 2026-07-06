@@ -8,9 +8,19 @@ class CalibrationLog extends Model
 {
     protected $fillable = [
         'equipment_id',
+
         'calibration_date',
+
         'certificate_number',
+
         'result',
+
+        'technician',
+
+        'vendor',
+
+        'next_due_date',
+
         'notes'
     ];
 
