@@ -46,16 +46,17 @@
 
         <br>
 
-        <select name="maintenance_type">
+        <select name="maintenance_type" required>
 
-            <option>Preventive</option>
+            <option value="Preventive">Preventive</option>
 
-            <option>Corrective</option>
+            <option value="Corrective">Corrective</option>
 
-            <option>Emergency</option>
+            <option value="Predictive">Predictive</option>
+
+            <option value="Emergency">Emergency</option>
 
         </select>
-
     </p>
 
     <p>

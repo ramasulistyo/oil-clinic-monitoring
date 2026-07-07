@@ -42,37 +42,49 @@ class DowntimeLogController extends Controller
      */
     public function store(Request $request)
     {
+        $request->validate([
+        'equipment_id' => 'required|exists:equipment,id',
+        'down_date'    => 'required|date',
+        'start_time'   => 'required',
+        'end_time'     => 'nullable|after:start_time',
+        'failure_type' => 'required|string',
+        'technician'   => 'required|string',
+    ]);
+
+    $hours = 0;
+    if ($request->end_time) {
         $start = Carbon::parse($request->start_time);
         $end   = Carbon::parse($request->end_time);
-
-        $hours = round(
-        $start->diffInMinutes($end) / 60,2);
+        $hours = round($start->diffInMinutes($end) / 60, 2);
+    }
 
         DowntimeLog::create([
 
-            'equipment_id'   => $request->equipment_id,
+        'equipment_id'     => $request->equipment_id,
 
-            'down_date'      => $request->down_date,
+        'down_date'        => $request->down_date,
 
-            'start_time'     => $request->start_time,
+        'repair_end_date'  => $request->repair_end_date,
 
-            'end_time'       => $request->end_time,
+        'start_time'       => $request->start_time,
 
-            'downtime_hours' => $hours,
+        'end_time'         => $request->end_time,
 
-            'failure_type'   => $request->failure_type,
+        'downtime_hours'   => $hours,
 
-            'cause'          => $request->cause,
+        'failure_type'     => $request->failure_type,
 
-            'action_taken'   => $request->action_taken,
+        'cause'            => $request->cause,
 
-            'technician'     => $request->technician,
+        'action_taken'     => $request->action_taken,
 
-            'remarks'        => $request->remarks,
+        'technician'       => $request->technician,
 
-        ]);
+        'remarks'          => $request->remarks,
 
-        return redirect('/downtime-log');
+    ]);
+
+        return redirect('/downtime-log')->with('success', 'Data downtime tersimpan.');
     }
 
     /**
@@ -109,26 +121,38 @@ class DowntimeLogController extends Controller
      */
     public function update(Request $request, DowntimeLog $downtimeLog)
     {
-         $start = Carbon::parse($request->start_time);
-    $end = Carbon::parse($request->end_time);
-
-    $hours = round($start->diffInMinutes($end) / 60, 2);
-
-    $downtimeLog->update([
-        'equipment_id'  => $request->equipment_id,
-        'down_date'     => $request->down_date,
-        'start_time'    => $request->start_time,
-        'end_time'      => $request->end_time,
-        'downtime_hours'=> $hours,
-        'failure_type'  => $request->failure_type,
-        'cause'         => $request->cause,
-        'action_taken'  => $request->action_taken,
-        'technician'    => $request->technician,
-        'remarks'       => $request->remarks,
+         $request->validate([
+        'equipment_id' => 'required|exists:equipment,id',
+        'down_date'    => 'required|date',
+        'start_time'   => 'required',
+        'end_time'     => 'nullable|after:start_time',
+        'failure_type' => 'required|string',
+        'technician'   => 'required|string',
     ]);
 
-    return redirect('/downtime-log');
+    $hours = 0;
+    if ($request->end_time) {
+        $start = Carbon::parse($request->start_time);
+        $end   = Carbon::parse($request->end_time);
+        $hours = round($start->diffInMinutes($end) / 60, 2);
     }
+
+    $downtimeLog->update([
+        'equipment_id'     => $request->equipment_id,
+        'down_date'        => $request->down_date,
+        'repair_end_date'  => $request->repair_end_date,
+        'start_time'       => $request->start_time,
+        'end_time'         => $request->end_time,
+        'downtime_hours'   => $hours,
+        'failure_type'     => $request->failure_type,
+        'cause'            => $request->cause,
+        'action_taken'     => $request->action_taken,
+        'technician'       => $request->technician,
+        'remarks'          => $request->remarks,
+    ]);
+
+    return redirect('/downtime-log')->with('success', 'Data downtime diperbarui.');
+}
 
     /**
      * Remove the specified resource from storage.

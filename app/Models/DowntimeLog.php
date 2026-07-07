@@ -12,6 +12,8 @@ class DowntimeLog extends Model
         'equipment_id',
 
         'down_date',
+        
+        'repair_end_date',
 
         'start_time',
 

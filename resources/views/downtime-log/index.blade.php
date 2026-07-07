@@ -14,6 +14,8 @@
 
     <th>Date</th>
 
+    <th>Repair End</th>
+
     <th>Start</th>
 
     <th>End</th>
@@ -35,6 +37,8 @@
     <td>{{ $log->equipment->equipment_name }}</td>
 
     <td>{{ $log->down_date }}</td>
+
+    <td>{{ $log->repair_end_date ?? '-' }}</td>
 
     <td>{{ $log->start_time }}</td>
 

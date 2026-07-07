@@ -36,33 +36,42 @@ class OperatingLogController extends Controller
      */
     public function store(Request $request)
     {
-        $start = Carbon::parse($request->start_time);
-        $end = Carbon::parse($request->end_time);
+        $request->validate([
+        'equipment_id'   => 'required|exists:equipment,id',
+        'operating_date' => 'required|date',
+        'start_time'     => 'required',
+        'end_time'       => 'required|after:start_time',
+        'sample_count'   => 'nullable|integer|min:0',
+        'pic'            => 'required|string',
+    ]);
 
-        $minutes = $start->diffInMinutes($end);
-        $hours = round ($minutes / 60, 2);
+    $start = Carbon::parse($request->start_time);
+    $end = Carbon::parse($request->end_time);
 
-        OperatingLog::create([
+    $minutes = $start->diffInMinutes($end);
+    $hours = round($minutes / 60, 2);
 
-            'equipment_id' => $request->equipment_id,
+    OperatingLog::create([
 
-            'operating_date' => $request->operating_date,
+        'equipment_id' => $request->equipment_id,
 
-            'start_time' => $request->start_time,
+        'operating_date' => $request->operating_date,
 
-            'end_time' => $request->end_time,
+        'start_time' => $request->start_time,
 
-            'operating_hours' => $hours,
+        'end_time' => $request->end_time,
 
-            'sample_count' => $request->sample_count,
+        'operating_hours' => $hours,
 
-            'pic' => $request->pic,
+        'sample_count' => $request->sample_count ?? 0,
 
-            'remarks' => $request->remarks
+        'pic' => $request->pic,
+
+        'remarks' => $request->remarks
 
     ]);
 
-    return redirect('/operating-log');
+        return redirect('/operational')->with('success', 'Data operasional tersimpan.');
     }
 
     /**
@@ -107,7 +116,7 @@ class OperatingLogController extends Controller
         $end = Carbon::parse($request->end_time);
 
         $minutes = $start->diffInMinutes($end);
-        $hours = $minutes / 60;
+        $hours = round($minutes / 60, 2);
 
         $operatingLog->update([
 

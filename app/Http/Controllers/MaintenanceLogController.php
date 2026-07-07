@@ -43,31 +43,41 @@ class MaintenanceLogController extends Controller
      */
     public function store(Request $request)
     {
-            MaintenanceLog::create([
+             $request->validate([
+        'equipment_id'     => 'required|exists:equipment,id',
+        'maintenance_date' => 'required|date',
+        'maintenance_type' => 'required|string',
+        'technician'       => 'required|string',
+        'cost'             => 'nullable|numeric|min:0',
+        'next_maintenance' => 'nullable|date|after_or_equal:maintenance_date',
+        'action_taken'     => 'required|string',
+    ]);
 
-            'equipment_id'      => $request->equipment_id,
+    MaintenanceLog::create([
 
-            'maintenance_date'  => $request->maintenance_date,
+        'equipment_id'      => $request->equipment_id,
 
-            'maintenance_type'  => $request->maintenance_type,
+        'maintenance_date'  => $request->maintenance_date,
 
-            'technician'        => $request->technician,
+        'maintenance_type'  => $request->maintenance_type,
 
-            'vendor'            => $request->vendor,
+        'technician'        => $request->technician,
 
-            'cost'              => $request->cost,
+        'vendor'            => $request->vendor,
 
-            'parts_replaced'    => $request->parts_replaced,
+        'cost'              => $request->cost ?? 0,
 
-            'action_taken'      => $request->action_taken,
+        'parts_replaced'    => $request->parts_replaced,
 
-            'next_maintenance'  => $request->next_maintenance,
+        'action_taken'      => $request->action_taken,
 
-            'remarks'           => $request->remarks,
+        'next_maintenance'  => $request->next_maintenance,
 
-        ]);
+        'remarks'           => $request->remarks,
 
-        return redirect('/maintenance-log');
+    ]);
+
+    return redirect('/maintenance-log')->with('success', 'Data maintenance tersimpan.');
     }
 
     /**
@@ -104,31 +114,41 @@ class MaintenanceLogController extends Controller
      */
     public function update(Request $request, MaintenanceLog $maintenanceLog)
     {
-            $maintenanceLog->update([
+        $request->validate([
+        'equipment_id'     => 'required|exists:equipment,id',
+        'maintenance_date' => 'required|date',
+        'maintenance_type' => 'required|string',
+        'technician'       => 'required|string',
+        'cost'             => 'nullable|numeric|min:0',
+        'next_maintenance' => 'nullable|date|after_or_equal:maintenance_date',
+        'action_taken'     => 'required|string',
+    ]);
 
-            'equipment_id'      => $request->equipment_id,
+    $maintenanceLog->update([
 
-            'maintenance_date'  => $request->maintenance_date,
+        'equipment_id'      => $request->equipment_id,
 
-            'maintenance_type'  => $request->maintenance_type,
+        'maintenance_date'  => $request->maintenance_date,
 
-            'technician'        => $request->technician,
+        'maintenance_type'  => $request->maintenance_type,
 
-            'vendor'            => $request->vendor,
+        'technician'        => $request->technician,
 
-            'cost'              => $request->cost,
+        'vendor'            => $request->vendor,
 
-            'parts_replaced'    => $request->parts_replaced,
+        'cost'              => $request->cost ?? 0,
 
-            'action_taken'      => $request->action_taken,
+        'parts_replaced'    => $request->parts_replaced,
 
-            'next_maintenance'  => $request->next_maintenance,
+        'action_taken'      => $request->action_taken,
 
-            'remarks'           => $request->remarks,
+        'next_maintenance'  => $request->next_maintenance,
 
-        ]);
+        'remarks'           => $request->remarks,
 
-        return redirect('/maintenance-log');
+    ]);
+
+    return redirect('/maintenance-log')->with('success', 'Data maintenance diperbarui.');
     }
 
     /**

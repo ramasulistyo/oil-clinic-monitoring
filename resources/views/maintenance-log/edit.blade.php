@@ -39,7 +39,7 @@
     <p>
         Maintenance Type <br>
 
-        <select name="maintenance_type">
+        <select name="maintenance_type" required>
 
             <option value="Preventive"
                 {{ $maintenanceLog->maintenance_type == 'Preventive' ? 'selected' : '' }}>
@@ -54,6 +54,11 @@
             <option value="Predictive"
                 {{ $maintenanceLog->maintenance_type == 'Predictive' ? 'selected' : '' }}>
                 Predictive
+            </option>
+
+            <option value="Emergency"
+                {{ $maintenanceLog->maintenance_type == 'Emergency' ? 'selected' : '' }}>
+                Emergency
             </option>
 
         </select>

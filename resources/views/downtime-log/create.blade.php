@@ -35,6 +35,16 @@
 
     </p>
 
+        <p>
+
+        Repair End Date <br>
+
+        <input
+            type="date"
+            name="repair_end_date">
+
+    </p>
+
     <p>
 
         Start Time <br>
