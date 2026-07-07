@@ -174,3 +174,31 @@ Hours
 @endforeach
 
 </table>
+
+<h2>Downtime History</h2>
+
+<table border="1" cellpadding="5">
+    <tr>
+        <th>Date</th>
+        <th>Start</th>
+        <th>End</th>
+        <th>Hours</th>
+        <th>Failure Type</th>
+        <th>Technician</th>
+    </tr>
+
+    @forelse($equipment->downtimeLogs as $log)
+    <tr>
+        <td>{{ $log->down_date }}</td>
+        <td>{{ $log->start_time }}</td>
+        <td>{{ $log->end_time }}</td>
+        <td>{{ $log->downtime_hours }}</td>
+        <td>{{ $log->failure_type }}</td>
+        <td>{{ $log->technician }}</td>
+    </tr>
+    @empty
+    <tr>
+        <td colspan="6">No downtime history.</td>
+    </tr>
+    @endforelse
+</table>

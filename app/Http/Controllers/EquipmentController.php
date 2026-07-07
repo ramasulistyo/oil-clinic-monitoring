@@ -40,6 +40,7 @@ class EquipmentController extends Controller
     {
          $equipment->load([
         'maintenanceLogs',
+        'downtimeLogs',
         'calibrationLogs',
         'operatingLogs' => function ($query) {
         $query->orderBy('operating_date', 'desc')
