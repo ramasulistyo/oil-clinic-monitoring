@@ -36,6 +36,38 @@
 
 <p>
 
+    <strong>Technician :</strong>
+
+    {{ $calibrationLog->technician }}
+
+</p>
+
+<p>
+
+    <strong>Vendor :</strong>
+
+    {{ $calibrationLog->vendor }}
+
+</p>
+
+<p>
+
+    <strong>Duration :</strong>
+
+    {{ $calibrationLog->duration_hours }} hours
+
+</p>
+
+<p>
+
+    <strong>Next Due Date :</strong>
+
+    {{ $calibrationLog->next_due_date }}
+
+</p>
+
+<p>
+
     <strong>Notes :</strong>
 
     {{ $calibrationLog->notes }}

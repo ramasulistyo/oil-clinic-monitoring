@@ -8,10 +8,9 @@ use App\Http\Controllers\DowntimeLogController;
 use App\Http\Controllers\MaintenanceLogController;
 use App\Http\Controllers\CalibrationLogController;
 use App\Http\Controllers\OperationalController;
+use App\Http\Controllers\HomeController;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [HomeController::class, 'index']);
 
 Route::resource('equipment', EquipmentController::class);
 Route::resource('operating-log', OperatingLogController::class);

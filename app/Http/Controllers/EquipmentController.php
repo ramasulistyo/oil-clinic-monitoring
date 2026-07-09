@@ -38,45 +38,84 @@ class EquipmentController extends Controller
      */
     public function show(Equipment $equipment)
     {
-         $equipment->load([
-        'maintenanceLogs',
-        'downtimeLogs',
-        'calibrationLogs',
-        'operatingLogs' => function ($query) {
-        $query->orderBy('operating_date', 'desc')
-              ->orderBy('start_time', 'desc');
-        }
-    ]);
+        $equipment->load([
+    'maintenanceLogs',
+    'downtimeLogs',
+    'calibrationLogs',
+    'operatingLogs' => function ($query) {
+    $query->orderBy('operating_date', 'desc')
+          ->orderBy('start_time', 'desc');
+    }
+]);
 
-    $totalHours = $equipment
-        ->operatingLogs
-        ->sum('operating_hours');
+$totalHours = $equipment
+    ->operatingLogs
+    ->sum('operating_hours');
 
-    $totalSamples = $equipment
-        ->operatingLogs
-        ->sum('sample_count');
-    
-    $totalSessions = $equipment->operatingLogs->count();
+$totalSamples = $equipment
+    ->operatingLogs
+    ->sum('sample_count');
 
-    $averageHours = $totalSessions > 0
-        ? $totalHours / $totalSessions
-        : 0;
+$totalSessions = $equipment->operatingLogs->count();
 
-    $lastOperation = $equipment
-        ->operatingLogs
-        ->sortByDesc(function ($log) {
-            return $log->operating_date.' '.$log->end_time;
-        })
-        ->first();
+$averageHours = $totalSessions > 0
+    ? $totalHours / $totalSessions
+    : 0;
 
-    return view('equipment.show',
-        compact(
-        'equipment',
-        'totalHours',
-        'totalSamples',
-        'totalSessions',
-        'averageHours',
-        'lastOperation'
+$lastOperation = $equipment
+    ->operatingLogs
+    ->sortByDesc(function ($log) {
+        return $log->operating_date.' '.$log->end_time;
+    })
+    ->first();
+
+// Total downtime & availability rate
+$totalDowntimeHours = $equipment->downtimeLogs->sum('downtime_hours');
+$totalTracked = $totalHours + $totalDowntimeHours;
+$availabilityRate = $totalTracked > 0
+    ? round(($totalHours / $totalTracked) * 100)
+    : 100;
+
+// Gabungkan semua log jadi satu timeline, urut dari yang terbaru
+$timeline = collect()
+    ->concat($equipment->downtimeLogs->map(fn ($log) => [
+        'date'  => $log->down_date,
+        'type'  => 'Downtime',
+        'color' => 'red',
+        'title' => $log->failure_type,
+        'desc'  => trim(($log->cause ? "Penyebab: {$log->cause}. " : '') . ($log->action_taken ? "Tindakan: {$log->action_taken}." : '')),
+        'by'    => $log->technician,
+    ]))
+    ->concat($equipment->maintenanceLogs->map(fn ($log) => [
+        'date'  => $log->maintenance_date,
+        'type'  => 'Maintenance',
+        'color' => 'yellow',
+        'title' => $log->maintenance_type,
+        'desc'  => $log->action_taken,
+        'by'    => $log->technician,
+    ]))
+    ->concat($equipment->calibrationLogs->map(fn ($log) => [
+        'date'  => $log->calibration_date,
+        'type'  => 'Calibration',
+        'color' => 'blue',
+        'title' => "Hasil: {$log->result}",
+        'desc'  => $log->certificate_number ? "No. Sertifikat: {$log->certificate_number}" : null,
+        'by'    => $log->technician,
+    ]))
+    ->sortByDesc('date')
+    ->values();
+
+return view('equipment.show',
+    compact(
+    'equipment',
+    'totalHours',
+    'totalSamples',
+    'totalSessions',
+    'averageHours',
+    'lastOperation',
+    'totalDowntimeHours',
+    'availabilityRate',
+    'timeline'
     )
      );
     }

@@ -43,7 +43,15 @@ class CalibrationLogController extends Controller
      */
     public function store(Request $request)
     {
-        CalibrationLog::create([
+        $request->validate([
+        'equipment_id'        => 'required|exists:equipment,id',
+        'calibration_date'    => 'required|date',
+        'result'               => 'required|in:PASS,FAIL',
+        'duration_hours'       => 'nullable|numeric|min:0',
+        'next_due_date'        => 'nullable|date|after_or_equal:calibration_date',
+    ]);
+
+    CalibrationLog::create([
 
         'equipment_id' => $request->equipment_id,
 
@@ -53,11 +61,19 @@ class CalibrationLogController extends Controller
 
         'result' => $request->result,
 
+        'technician' => $request->technician,
+
+        'vendor' => $request->vendor,
+
+        'duration_hours' => $request->duration_hours,
+
+        'next_due_date' => $request->next_due_date,
+
         'notes' => $request->notes,
 
         ]);
 
-        return redirect('/calibration-log');
+        return redirect('/calibration-log')->with('success', 'Data kalibrasi tersimpan.');
     }
 
     /**
@@ -92,7 +108,15 @@ class CalibrationLogController extends Controller
      */
     public function update(Request $request, CalibrationLog $calibrationLog)
     {
-         $calibrationLog->update([
+         $request->validate([
+        'equipment_id'        => 'required|exists:equipment,id',
+        'calibration_date'    => 'required|date',
+        'result'               => 'required|in:PASS,FAIL',
+        'duration_hours'       => 'nullable|numeric|min:0',
+        'next_due_date'        => 'nullable|date|after_or_equal:calibration_date',
+    ]);
+
+    $calibrationLog->update([
 
         'equipment_id' => $request->equipment_id,
 
@@ -102,11 +126,19 @@ class CalibrationLogController extends Controller
 
         'result' => $request->result,
 
+        'technician' => $request->technician,
+
+        'vendor' => $request->vendor,
+
+        'duration_hours' => $request->duration_hours,
+
+        'next_due_date' => $request->next_due_date,
+
         'notes' => $request->notes,
 
-        ]);
+    ]);
 
-        return redirect('/calibration-log');
+    return redirect('/calibration-log')->with('success', 'Data kalibrasi diperbarui.');
     }
 
     /**

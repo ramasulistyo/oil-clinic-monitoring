@@ -19,6 +19,8 @@ class CalibrationLog extends Model
 
         'vendor',
 
+        'duration_hours',
+
         'next_due_date',
 
         'notes'
