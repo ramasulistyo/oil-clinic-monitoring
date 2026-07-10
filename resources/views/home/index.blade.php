@@ -4,6 +4,20 @@
     <meta charset="utf-8">
     <title>Oil Clinic — Equipment Monitoring</title>
     <script src="https://cdn.tailwindcss.com"></script>
+
+    <div class="flex justify-end gap-3 mb-4 text-sm">
+    @auth
+        <span class="text-gray-600">Halo, {{ Auth::user()->name }}</span>
+        <form method="POST" action="{{ route('logout') }}">
+            @csrf
+            <button type="submit" class="text-red-600 underline">Logout</button>
+        </form>
+    @else
+        <a href="{{ route('login') }}" class="text-blue-600 underline">Login</a>
+        <a href="{{ route('register') }}" class="text-blue-600 underline">Register</a>
+    @endauth
+</div>
+
 </head>
 <body class="bg-gray-50 min-h-screen">
 

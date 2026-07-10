@@ -10,12 +10,16 @@ use App\Http\Controllers\CalibrationLogController;
 use App\Http\Controllers\OperationalController;
 use App\Http\Controllers\HomeController;
 
-Route::get('/', [HomeController::class, 'index']);
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
-Route::resource('equipment', EquipmentController::class);
-Route::resource('operating-log', OperatingLogController::class);
-Route::resource('downtime-log', DowntimeLogController::class);
-Route::resource('maintenance-log', MaintenanceLogController::class);
-Route::resource('calibration-log', CalibrationLogController::class);
-Route::get('/dashboard', [DashboardController::class, 'index']);
-Route::get('/operational', [OperationalController::class, 'index']);
+Route::middleware('auth')->group(function () {
+    Route::resource('equipment', EquipmentController::class);
+    Route::resource('operating-log', OperatingLogController::class);
+    Route::resource('downtime-log', DowntimeLogController::class);
+    Route::resource('maintenance-log', MaintenanceLogController::class);
+    Route::resource('calibration-log', CalibrationLogController::class);
+    Route::get('/dashboard', [DashboardController::class, 'index']);
+    Route::get('/operational', [OperationalController::class, 'index']);
+});
+
+require __DIR__.'/auth.php';
